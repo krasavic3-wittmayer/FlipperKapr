@@ -1,4 +1,11 @@
 #include <Arduino.h>
+#include <LiquidCrystal.h>
+#include <SPI.h>
+#include <MFRC522.h>
+
+extern const char* menu125kHz[];
+extern const char* menu13MHz[];
+extern const char* menuIR[];
 
 const char* mainMenu[] = {
   "IR",
