@@ -20,7 +20,6 @@ It is **not** a “one-click hack tool” and does **not** magically break secur
 Depending on the build/version, Flipper Kapr may include:
 
 - Infrared (IR) signal sending and receiving  
-- Sub-GHz RF communication (e.g. 433 MHz modules)  
 - NFC / RFID experiments  
 - Simple UI (buttons, LEDs, display – if connected)  
 
