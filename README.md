@@ -1,4 +1,4 @@
-# Flipper Kapr 🐟
+# Flipper Kapr 🐟🐟🐟🐟
 
 Flipper Kapr is a **DIY Arduino-based experimental device**, inspired by tools like Flipper Zero.  
 Its purpose is **learning, experimentation, and exploration of embedded systems and communication protocols**, not hacking or illegal activity.
@@ -7,7 +7,7 @@ This project is mainly educational and was built to understand how different mod
 
 ## What is this?
 
-Flipper Kapr is a personal Arduino project that combines multiple modules into a single device for:
+Flipper Kapr 🐟 is a personal Arduino project that combines multiple modules into a single device for:
 
 - experimenting with signals and protocols  
 - learning how hardware modules communicate  
