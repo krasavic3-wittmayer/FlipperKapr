@@ -15,7 +15,7 @@ def show_string(menu: menu_type) -> None:
     else:
         str2: str = menu[index + 1][0]
     
-    os.system("cls")
+    os.system("clear")
     print("- " + str1)
     print("  " + str2)
 
