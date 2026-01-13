@@ -6,6 +6,7 @@
 extern const char* menu125kHz[];
 extern const char* menu13MHz[];
 extern const char* menuIR[];
+extern const char* menuBadUSB[];
 
 const char* mainMenu[] = {
   "IR",
