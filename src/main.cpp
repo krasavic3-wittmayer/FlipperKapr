@@ -1,128 +1,122 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-#include <SPI.h>
-#include <MFRC522.h>
 
-// Initialize the LCD with the numbers of the interface pins
+/* ================= LCD ================= */
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-// LCD custom chars   
-byte arrowLeft[8] = {
-  B00010,
-  B00100,
-  B01100,
-  B11111,
-  B01100,
-  B00100,
-  B00010,
-  B00000
-};
+/* ================= MENU STRUCTURES ================= */
+struct Menu;
 
-byte lineChar[8] = {
-  B00000,
-  B00000,
-  B00000,
-  B11111,
-  B00000,
-  B00000,
-  B00000,
-  B00000
-};
+typedef bool (*Action)();
 
-// extern menu declarations (ponecháno)
-extern const char* menu125kHz[];
-extern const char* menu13MHz[];
-extern const char* menuIR[];
-extern const char* menuBadUSB[];
-
-// main menu (ponecháno)
-const char* mainMenu[] = {
-  "IR",
-  "RFID 125kHz",
-  "RFID 13.56MHz",
-  "Bad USB"
-};
-
-// =================== NÁHRADA ZA std::tuple + std::function ===================
-struct Item {
+struct MenuItem {
   const char* text;
-  bool (*func)();   // ukazatel na funkci
+  Action action;     // funkce (lambda v Pythonu)
+  Menu* submenu;     // vnořené menu
 };
 
-// místo std::vector
-Item list[];
+struct Menu {
+  MenuItem* items;
+  int length;
+};
+
+/* ================= GLOBALS ================= */
 int index = 0;
 
-// testovací funkce
-bool t() {
+/* ================= DISPLAY ================= */
+void showMenu(Menu* menu) {
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("-> ");
+  lcd.print(menu->items[index].text);
+
+  lcd.setCursor(0, 1);
+  int next = (index + 1 >= menu->length) ? 0 : index + 1;
+  lcd.print("   ");
+  lcd.print(menu->items[next].text);
+}
+
+/* ================= MENU ENGINE ================= */
+bool runMenu(Menu* menu) {
+  index = 0;
+  showMenu(menu);
+
+  while (true) {
+    int joy = analogRead(A1);
+
+    if (joy > 800) {                  // DOWN
+      while (analogRead(A1) > 800);
+      index++;
+      if (index >= menu->length) index = 0;
+      showMenu(menu);
+    }
+    else if (joy < 200) {             // UP
+      while (analogRead(A1) < 200);
+      index--;
+      if (index < 0) index = menu->length - 1;
+      showMenu(menu);
+    }
+    else if (digitalRead(1) == LOW) { // ENTER
+      while (digitalRead(1) == LOW);
+
+      MenuItem* item = &menu->items[index];
+
+      if (item->submenu) {
+        if (runMenu(item->submenu)) return true;
+      }
+      else if (item->action) {
+        if (item->action()) return true;
+      }
+
+      showMenu(menu);
+    }
+
+    delay(20);
+  }
+}
+
+/* ================= ACTIONS ================= */
+bool ok() {
   return true;
 }
 
-// =================== OPRAVENÁ FUNKCE ===================
-void showScreen(Item[] menu) {
-  const char* line1 = menu[index].text;
-
-  if (index + 1 >= menu.len) {
-    const char* line2 = menu[0].text;
-  } else {
-    const char* line2 = menu[index + 1].text;
-  }
-
+bool print52() {
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print(line1);
-  lcd.setCursor(0, 1);
-  lcd.print(line2);
+  lcd.print("5.2 pressed");
+  delay(1000);
+  return false;
 }
 
-bool Menu(Item[] menu) {
-  index = 0;
+/* ================= MENU DEFINITIONS ================= */
+Menu submenu5;
+Menu mainMenu;
 
-  while (true) {
-    if (analogRead(A1) >= 824) {
-      index += 1;
+MenuItem submenu5Items[] = {
+  {"5.1", ok, nullptr},
+  {"5.2", print52, nullptr},
+  {"5.3", ok, nullptr},
+  {"5.4", ok, nullptr},
+  {"5.5", ok, nullptr},
+};
 
-      if (index >= menu.len) {
-        index = 0;
-      }
+MenuItem mainMenuItems[] = {
+  {"1.", ok, nullptr},
+  {"2.", ok, nullptr},
+  {"3.", ok, nullptr},
+  {"4.", ok, nullptr},
+  {"5.", nullptr, &submenu5},
+};
 
-    } else if (analogRead(A1) <= 200) {
-      index -= 1;
+Menu submenu5 = { submenu5Items, 5 };
+Menu mainMenu = { mainMenuItems, 5 };
 
-      if (index == -1) {
-        index = menu.len - 1;
-      }
-    } else if (digitalRead(1) == LOW) {
-      int temp_index = index;
-
-      if (menu[index].func()) {
-        break;
-      }
-    }
-
-    showScreen(menu)
-    sleep(10)
-    
-  }
-}
-
-// =================== SETUP ===================
+/* ================= SETUP / LOOP ================= */
 void setup() {
   lcd.begin(16, 2);
-
-  lcd.createChar(0, arrowLeft);
-  lcd.createChar(1, lineChar);
-
-  // inicializace "list"
-  list[0] = {"1.", t};
-  list[1] = {"2.", t};
-  list[2] = {"3.", t};
-
-  // test zobrazení
-  showScreen(list[0].text, "OK");
+  pinMode(1, INPUT_PULLUP);
 }
 
-// =================== LOOP ===================
 void loop() {
-  //
+  runMenu(&mainMenu);
 }
