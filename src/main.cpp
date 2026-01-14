@@ -51,6 +51,7 @@ struct Item {
 
 // místo std::vector
 Item list[];
+int index = 0;
 
 // testovací funkce
 bool t() {
@@ -58,12 +59,51 @@ bool t() {
 }
 
 // =================== OPRAVENÁ FUNKCE ===================
-void showScreen(item[] menu) {
+void showScreen(Item[] menu) {
+  const char* line1 = menu[index].text;
+
+  if (index + 1 >= menu.len) {
+    const char* line2 = menu[0].text;
+  } else {
+    const char* line2 = menu[index + 1].text;
+  }
+
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(line1);
   lcd.setCursor(0, 1);
   lcd.print(line2);
+}
+
+bool Menu(Item[] menu) {
+  index = 0;
+
+  while (true) {
+    if (analogRead(A1) >= 824) {
+      index += 1;
+
+      if (index >= menu.len) {
+        index = 0;
+      }
+
+    } else if (analogRead(A1) <= 200) {
+      index -= 1;
+
+      if (index == -1) {
+        index = menu.len - 1;
+      }
+    } else if (digitalRead(1) == LOW) {
+      int temp_index = index;
+
+      if (menu[index].func()) {
+        break;
+      }
+    }
+
+    showScreen(menu)
+    sleep(10)
+    
+  }
 }
 
 // =================== SETUP ===================
@@ -84,5 +124,5 @@ void setup() {
 
 // =================== LOOP ===================
 void loop() {
-  // zatím prázdné – stejně jako původně
+  //
 }
