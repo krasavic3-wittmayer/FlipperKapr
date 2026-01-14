@@ -17,7 +17,7 @@ def show_string(menu: menu_type) -> None:
     
     os.system("cls")
     print("-> " + str1)
-    print("   " + str2)
+    print("  " + str2)
 
 def menu(menu: menu_type) -> Callable[..., bool]:
     def run():
