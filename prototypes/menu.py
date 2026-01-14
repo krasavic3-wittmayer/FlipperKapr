@@ -5,7 +5,7 @@ import time
 
 index = 0
 
-type menu_type = list[tuple[str, Callable[..., bool]]]
+type menu_type = list[tuple[str, Callable[..., bool | None]]]
 
 def show_string(menu: menu_type) -> None:
     str1: str = menu[index][0]
@@ -15,8 +15,8 @@ def show_string(menu: menu_type) -> None:
     else:
         str2: str = menu[index + 1][0]
     
-    os.system("clear")
-    print("- " + str1)
+    os.system("cls")
+    print("-> " + str1)
     print("  " + str2)
 
 def menu(menu: menu_type) -> Callable[..., bool]:
