@@ -22,6 +22,33 @@ struct Menu {
   int length;
 };
 
+// LCD custom chars   
+byte arrowLeft[8] = {
+  B00010,
+  B00100,
+  B01100,
+  B11111,
+  B01100,
+  B00100,
+  B00010,
+  B00000
+};
+byte line[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B11111,
+  B00000,
+  B00000,
+  B00000,
+  B00000
+};
+
+extern const char* menu125kHz[];
+extern const char* menu13MHz[];
+extern const char* menuIR[];
+extern const char* menuBadUSB[];
+
 /* ================= GLOBALS ================= */
 int index = 0;
 
