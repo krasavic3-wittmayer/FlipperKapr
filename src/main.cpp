@@ -1,11 +1,42 @@
-#include <iostream>
+#include <Arduino.h>
+#include <LiquidCrystal.h>
+#include <SPI.h>
+#include <MFRC522.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+byte arrowLeft[8] = {
+  B00010,
+  B00100,
+  B01100,
+  B11111,
+  B01100,
+  B00100,
+  B00010,
+  B00000
+};
+byte line[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B11111,
+  B00000,
+  B00000,
+  B00000,
+  B00000
+};
+
+extern const char* menu125kHz[];
+extern const char* menu13MHz[];
+extern const char* menuIR[];
+extern const char* menuBadUSB[];
 
 int index = 0;
 
 extern struct Menu;
 
 struct MenuItem {
-    std::string text;
+    const char *text;
     bool (*action)();
     Menu* menu = nullptr;
 };
@@ -20,8 +51,8 @@ bool back() {
 }
 
 void ShowScreen(Menu menu) {
-    std::string line1 = menu.items[index].text;
-    std::string line2;
+    const char *line1 = menu.items[index].text;
+    const char *line2;
 
     if (index + 1 >= menu.len) {
         line2 = menu.items[0].text;
@@ -30,20 +61,29 @@ void ShowScreen(Menu menu) {
         line2 = menu.items[index + 1].text;
     }
 
-    std::cout << line1 << "  <-" << "\n";
-    std::cout << line2 << "\n";
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+
+    lcd.setCursor(0, 14);
+    lcd.print(arrowLeft);
+
+    lcd.setCursor(0, 1);
+    lcd.print(line2);
 }
 
 bool MemuFunction(Menu menu) {
     index = 0;
     int temp_index;
     ShowScreen(menu);
-    char input;
+    int input;
 
     while (true) {
-        std::cin >> input;
+        input = analogRead(A1);
 
-        if (input == 'u') {
+        if (input > 800) {
+            while (input > 800);
+
             index += 1;
 
             if (index >= menu.len) {
@@ -51,7 +91,9 @@ bool MemuFunction(Menu menu) {
             }
 
         }
-        else if (input == 'd') {
+        else if (input < 200) {
+            while (input < 200);
+
             index -= 1;
 
             if (index == -1) {
@@ -59,7 +101,9 @@ bool MemuFunction(Menu menu) {
             }
 
         }
-        else if (input == 'e') {
+        else if (digitalRead(6) == LOW) {
+            while (digitalRead(6) == LOW);
+
             if (menu.items[index].action == nullptr) {
                 temp_index = index;
                 MemuFunction(*menu.items[index].menu);
@@ -95,7 +139,7 @@ bool newUSB() { return false; }
 bool savedUSB() { return false; }
 
 
-int main() {
+void setup() {
     Menu mainMenu;
     Menu IRMenu;
     Menu RFID125Menu;
@@ -136,5 +180,10 @@ int main() {
         {"Bad USB", nullptr, &badUSBMenu},
     }; mainMenu = { mainMenuItems, 4 };
 
+    lcd.begin(16, 2);
+    pinMode(6, INPUT_PULLUP);
+}
+
+void loop() {
     MemuFunction(mainMenu);
 }
