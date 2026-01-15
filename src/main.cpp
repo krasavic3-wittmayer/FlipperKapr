@@ -48,6 +48,8 @@ extern const char* menu125kHz[];
 extern const char* menu13MHz[];
 extern const char* menuIR[];
 extern const char* menuBadUSB[];
+extern Menu mainMenu;
+extern Menu submenu5;
 
 /* ================= GLOBALS ================= */
 int index = 0;
@@ -86,8 +88,8 @@ bool runMenu(Menu* menu) {
       if (index < 0) index = menu->length - 1;
       showMenu(menu);
     }
-    else if (digitalRead(1) == LOW) { // ENTER
-      while (digitalRead(1) == LOW);
+    else if (digitalRead(6) == LOW) { // ENTER
+      while (digitalRead(6) == LOW);
 
       MenuItem* item = &menu->items[index];
 
@@ -118,8 +120,6 @@ bool print52() {
 }
 
 /* ================= MENU DEFINITIONS ================= */
-Menu submenu5;
-Menu mainMenu;
 
 MenuItem submenu5Items[] = {
   {"5.1", ok, nullptr},
@@ -143,7 +143,7 @@ Menu mainMenu = { mainMenuItems, 5 };
 /* ================= SETUP / LOOP ================= */
 void setup() {
   lcd.begin(16, 2);
-  pinMode(1, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
 }
 
 void loop() {
