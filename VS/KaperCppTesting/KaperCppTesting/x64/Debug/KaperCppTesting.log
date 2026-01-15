@@ -1,0 +1,3 @@
+﻿  KaperCppTesting.cpp
+C:\Users\jakub\OneDrive - SPŠSE a VOŠ, Liberec\Programování\Kaper\FlipperKapr\VS\KaperCppTesting\KaperCppTesting\KaperCppTesting.cpp(5,15): warning C4091: extern : Levá strana Menu se ignoruje, pokud není deklarovaná žádná proměnná.
+  KaperCppTesting.vcxproj -> C:\Users\jakub\OneDrive - SPŠSE a VOŠ, Liberec\Programování\Kaper\FlipperKapr\VS\KaperCppTesting\x64\Debug\KaperCppTesting.exe
