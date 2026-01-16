@@ -30,6 +30,8 @@ extern const char* menu125kHz[];
 extern const char* menu13MHz[];
 extern const char* menuIR[];
 extern const char* menuBadUSB[];
+extern Menu mainMenu;
+extern Menu submenu5;
 
 int index = 0;
 
