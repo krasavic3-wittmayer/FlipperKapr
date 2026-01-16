@@ -139,6 +139,8 @@ bool sendUSB() { return false; }
 bool newUSB() { return false; }
 bool savedUSB() { return false; }
 
+bool mainSave() { return false; }
+
 Menu mainMenu;
 Menu IRMenu;
 Menu RFID125Menu;
@@ -177,6 +179,8 @@ MenuItem mainMenuItems[] = {
     {"RFID 125 kHz", nullptr, &RFID125Menu},
     {"RFID 13.56 MHz", nullptr, &RFID1356Menu},
     {"Bad USB", nullptr, &badUSBMenu},
+    {"Master save", mainSave, nullptr},
+
 };
 
 void setup() {
