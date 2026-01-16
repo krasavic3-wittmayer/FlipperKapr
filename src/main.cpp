@@ -3,26 +3,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-/* ================= LCD ================= */
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-/* ================= MENU STRUCTURES ================= */
-struct Menu;
-
-typedef bool (*Action)();
-
-struct MenuItem {
-  const char* text;
-  Action action;     // funkce (lambda v Pythonu)
-  Menu* submenu;     // vnořené menu
-};
-
-struct Menu {
-  MenuItem* items;
-  int length;
-};
-
-// LCD custom chars   
 byte arrowLeft[8] = {
   B00010,
   B00100,
@@ -51,101 +33,169 @@ extern const char* menuBadUSB[];
 extern Menu mainMenu;
 extern Menu submenu5;
 
-/* ================= GLOBALS ================= */
 int index = 0;
 
-/* ================= DISPLAY ================= */
-void showMenu(Menu* menu) {
-  lcd.clear();
+struct Menu;
 
-  lcd.setCursor(0, 0);
-  lcd.print("-> ");
-  lcd.print(menu->items[index].text);
+struct MenuItem {
+    const char* text;
+    bool (*action)();
+    Menu* menu;
+};
 
-  lcd.setCursor(0, 1);
-  int next = (index + 1 >= menu->length) ? 0 : index + 1;
-  lcd.print("   ");
-  lcd.print(menu->items[next].text);
+struct Menu {
+    MenuItem* items;
+    int len;
+};
+
+bool back() {
+    return true;
 }
 
-/* ================= MENU ENGINE ================= */
-bool runMenu(Menu* menu) {
-  index = 0;
-  showMenu(menu);
+void ShowScreen(Menu menu) {
+    const char *line1 = menu.items[index].text;
+    const char *line2;
 
-  while (true) {
-    int joy = analogRead(A1);
-
-    if (joy > 800) {                  // DOWN
-      while (analogRead(A1) > 800);
-      index++;
-      if (index >= menu->length) index = 0;
-      showMenu(menu);
+    if (index + 1 >= menu.len) {
+        line2 = menu.items[0].text;
     }
-    else if (joy < 200) {             // UP
-      while (analogRead(A1) < 200);
-      index--;
-      if (index < 0) index = menu->length - 1;
-      showMenu(menu);
-    }
-    else if (digitalRead(6) == LOW) { // ENTER
-      while (digitalRead(6) == LOW);
-
-      MenuItem* item = &menu->items[index];
-
-      if (item->submenu) {
-        if (runMenu(item->submenu)) return true;
-      }
-      else if (item->action) {
-        if (item->action()) return true;
-      }
-
-      showMenu(menu);
+    else {
+        line2 = menu.items[index + 1].text;
     }
 
-    delay(20);
-  }
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+
+    lcd.setCursor(0, 14);
+    lcd.write(byte(0));
+
+    lcd.setCursor(0, 1);
+    lcd.print(line2);
 }
 
-/* ================= ACTIONS ================= */
-bool ok() {
-  return true;
+bool MemuFunction(Menu menu) {
+    index = 0;
+    int temp_index;
+    ShowScreen(menu);
+    int input;
+
+    while (true) {
+        input = analogRead(A1);
+
+        if (input > 800) {
+            while (input > 800);
+
+            index += 1;
+
+            if (index >= menu.len) {
+                index = 0;
+            }
+
+        }
+        else if (input < 200) {
+            while (input < 200);
+
+            index -= 1;
+
+            if (index == -1) {
+                index = menu.len - 1;
+            }
+
+        }
+        else if (digitalRead(6) == LOW) {
+            while (digitalRead(6) == LOW);
+
+            if (menu.items[index].action == nullptr) {
+                temp_index = index;
+                MemuFunction(*menu.items[index].menu);
+                index = temp_index;
+
+            }
+            else {
+                if (menu.items[index].action()) {
+                    break;
+                }
+            }
+        }
+
+        ShowScreen(menu);
+        delay(50);
+    }
+
+    return false;
 }
 
-bool print52() {
-  lcd.clear();
-  lcd.print("5.2 pressed");
-  delay(1000);
-  return false;
-}
+bool sendIR() { return false; }
+bool recIR() { return false; }
 
-/* ================= MENU DEFINITIONS ================= */
+bool write125() { return false; }
+bool read125() { return false; }
+bool saved125() { return false; }
 
-MenuItem submenu5Items[] = {
-  {"5.1", ok, nullptr},
-  {"5.2", print52, nullptr},
-  {"5.3", ok, nullptr},
-  {"5.4", ok, nullptr},
-  {"5.5", ok, nullptr},
+bool write1356() { return false; }
+bool read1356() { return false; }
+bool saved1356() { return false; }
+
+bool sendUSB() { return false; }
+bool newUSB() { return false; }
+bool savedUSB() { return false; }
+
+bool mainSave() { return false; }
+
+Menu mainMenu;
+Menu IRMenu;
+Menu RFID125Menu;
+Menu RFID1356Menu;
+Menu badUSBMenu;
+
+MenuItem IRItems[] = {
+    {"Send", sendIR, nullptr},
+    {"Receive", recIR, nullptr},
+    {"Back", back, nullptr},
+};
+
+MenuItem RFID125items[] = {
+    {"Write", write125, nullptr},
+    {"Read", read125, nullptr},
+    {"Saved", saved125, nullptr},
+    {"Back", back, nullptr},
+};
+
+MenuItem RFID1356items[] = {
+    {"Write", write1356, nullptr},
+    {"Read", read1356, nullptr},
+    {"Saved", saved1356, nullptr},
+    {"Back", back, nullptr},
+};
+
+MenuItem badUSBitems[] = {
+    {"Send payload", sendUSB, nullptr},
+    {"New payload", newUSB, nullptr},
+    {"Saved", savedUSB, nullptr},
+    {"Back", back, nullptr},
 };
 
 MenuItem mainMenuItems[] = {
-  {"1.", ok, nullptr},
-  {"2.", ok, nullptr},
-  {"3.", ok, nullptr},
-  {"4.", ok, nullptr},
-  {"5.", nullptr, &submenu5},
+    {"IR", nullptr, &IRMenu},
+    {"RFID 125 kHz", nullptr, &RFID125Menu},
+    {"RFID 13.56 MHz", nullptr, &RFID1356Menu},
+    {"Bad USB", nullptr, &badUSBMenu},
+    {"Master save", mainSave, nullptr},
+
 };
 
-Menu submenu5 = { submenu5Items, 5 };
-Menu mainMenu = { mainMenuItems, 5 };
-
-/* ================= SETUP / LOOP ================= */
 void setup() {
-  lcd.begin(16, 2);
-  pinMode(6, INPUT_PULLUP);
+    IRMenu = { IRItems, 3 };
+    RFID125Menu = { RFID125items, 4 };
+    RFID1356Menu = { RFID1356items, 4 };
+    badUSBMenu = { badUSBitems, 4 };
+    mainMenu = { mainMenuItems, 4 };
+    
+    lcd.begin(16, 2);
+    pinMode(6, INPUT_PULLUP);
 }
 
 void loop() {
-  runMenu(&mainMenu);
+    MemuFunction(mainMenu);
 }
