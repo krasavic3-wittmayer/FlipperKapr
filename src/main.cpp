@@ -30,8 +30,6 @@ extern const char* menu125kHz[];
 extern const char* menu13MHz[];
 extern const char* menuIR[];
 extern const char* menuBadUSB[];
-extern Menu mainMenu;
-extern Menu submenu5;
 
 int index = 0;
 
@@ -83,8 +81,8 @@ bool MemuFunction(Menu menu) {
     while (true) {
         input = analogRead(A1);
 
-        if (input > 800) {
-            while (input > 800);
+        if (input > 824) {
+            while (input > 824);
 
             index += 1;
 
