@@ -26,14 +26,8 @@ byte line[8] = {
   B00000
 };
 
-extern const char* menu125kHz[];
-extern const char* menu13MHz[];
-extern const char* menuIR[];
-extern const char* menuBadUSB[];
-extern Menu mainMenu;
-extern Menu submenu5;
-
 int index = 0;
+int page = 0;
 
 struct Menu;
 
@@ -43,9 +37,15 @@ struct MenuItem {
     Menu* menu;
 };
 
-struct Menu {
+struct MenuPage {
     MenuItem* items;
     int len;
+};
+
+struct Menu {
+    MenuPage* pages;
+    int len;
+    int mainPage;
 };
 
 bool back() {
@@ -53,14 +53,14 @@ bool back() {
 }
 
 void ShowScreen(Menu menu) {
-    const char *line1 = menu.items[index].text;
-    const char *line2;
+    const char* line1 = menu.pages[page].items[index].text;
+    const char* line2;
 
-    if (index + 1 >= menu.len) {
-        line2 = menu.items[0].text;
+    if (index + 1 >= menu.pages[page].len) {
+        line2 = menu.pages[page].items[0].text;
     }
     else {
-        line2 = menu.items[index + 1].text;
+        line2 = menu.pages[page].items[index + 1].text;
     }
 
     lcd.clear();
@@ -72,58 +72,6 @@ void ShowScreen(Menu menu) {
 
     lcd.setCursor(0, 1);
     lcd.print(line2);
-}
-
-bool MemuFunction(Menu menu) {
-    index = 0;
-    int temp_index;
-    ShowScreen(menu);
-    int input;
-
-    while (true) {
-        input = analogRead(A1);
-
-        if (input > 800) {
-            while (input > 800);
-
-            index += 1;
-
-            if (index >= menu.len) {
-                index = 0;
-            }
-
-        }
-        else if (input < 200) {
-            while (input < 200);
-
-            index -= 1;
-
-            if (index == -1) {
-                index = menu.len - 1;
-            }
-
-        }
-        else if (digitalRead(6) == LOW) {
-            while (digitalRead(6) == LOW);
-
-            if (menu.items[index].action == nullptr) {
-                temp_index = index;
-                MemuFunction(*menu.items[index].menu);
-                index = temp_index;
-
-            }
-            else {
-                if (menu.items[index].action()) {
-                    break;
-                }
-            }
-        }
-
-        ShowScreen(menu);
-        delay(50);
-    }
-
-    return false;
 }
 
 bool sendIR() { return false; }
@@ -143,59 +91,364 @@ bool savedUSB() { return false; }
 
 bool mainSave() { return false; }
 
+namespace input {
+    int index = 0;
+    char text[13];
+
+    void add_char(char letter) {
+        if (!(index > 11)) {
+            text[index] = letter;
+            input::index += 1;
+        }
+    }
+
+    bool a() {
+        add_char('a');
+        return false;
+    }
+
+    bool b() {
+        add_char('b');
+        return false;
+    }
+
+    bool c() {
+        add_char('c');
+        return false;
+    }
+
+    bool d() {
+        add_char('d');
+        return false;
+    }
+
+    bool e() {
+        add_char('e');
+        return false;
+    }
+
+    bool f() {
+        add_char('f');
+        return false;
+    }
+
+
+    bool A() {
+        add_char('A');
+        return false;
+    }
+
+    bool B() {
+        add_char('B');
+        return false;
+    }
+
+    bool C() {
+        add_char('C');
+        return false;
+    }
+
+    bool D() {
+        add_char('D');
+        return false;
+    }
+
+    bool E() {
+        add_char('E');
+        return false;
+    }
+
+    bool inF() {
+        add_char('F');
+        return false;
+    }
+
+
+    bool in1() {
+        add_char('1');
+        return false;
+    }
+
+    bool in2() {
+        add_char('2');
+        return false;
+    }
+
+    bool in3() {
+        add_char('3');
+        return false;
+    }
+
+    bool in4() {
+        add_char('4');
+        return false;
+    }
+
+    bool in5() {
+        add_char('5');
+        return false;
+    }
+
+    bool in6() {
+        add_char('6');
+        return false;
+    }
+
+
+    bool in_tec() {
+        add_char('.');
+        return false;
+    }
+
+    bool in_car() {
+        add_char(',');
+        return false;
+    }
+
+    bool in_ptr() {
+        add_char('_');
+        return false;
+    }
+
+    bool in_dvo() {
+        add_char(':');
+        return false;
+    }
+
+    bool in_onz() {
+        add_char('(');
+        return false;
+    }
+
+    bool in_znz() {
+        add_char(')');
+        return false;
+    }
+
+    bool enter() {
+        /*
+        for (char let : text) {
+            std::cout << let;
+
+        };
+        text[11] = '\0';
+        std::cout << "\n";
+        */
+        text[11] = '\0';
+        lcd.setCursor(0, 0);
+        lcd.print(text);
+        delay(500);
+
+        return true;
+    }
+
+    void create() {
+        for (int i = 0; i <= 12; i += 1) {
+            text[i] = ' ';
+        }
+        index = 0;
+    }
+
+    MenuItem enterItem = { "Enter", enter, nullptr };
+};
+
+bool MemuFunction(Menu menu) {
+    index = 0;
+    page = menu.mainPage;
+
+    int temp_index;
+    int temp_page;
+
+    ShowScreen(menu);
+
+    while (true) {
+        if (analogRead(A1) > 824) {
+            index += 1;
+
+            if (index >= menu.pages[page].len) {
+                index = 0;
+            }
+
+        }
+        else if (analogRead(A1) < 200) {
+            index -= 1;
+
+            if (index == -1) {
+                index = menu.pages[page].len - 1;
+            }
+
+        }
+        else if (analogRead(A2) > 824) {
+            temp_page = page;
+            page += 1;
+
+            if (page >= menu.len) {
+                page = 0;
+            }
+
+            if (menu.pages[page].len < menu.pages[temp_page].len) {
+                index = menu.pages[page].len;
+            }
+        }
+
+        else if (analogRead(A2) < 200) {
+            temp_page = page;
+            page -= 1;
+
+            if (page == -1) {
+                page = menu.len - 1;
+            }
+
+            if (menu.pages[page].len < menu.pages[temp_page].len) {
+                index = menu.pages[page].len;
+            }
+        }
+
+
+        else if (digitalRead(6) == LOW) {
+            if (menu.pages[page].items[index].action == nullptr) {
+                temp_index = index;
+                temp_page = page;
+
+                input::create();
+                MemuFunction(*menu.pages[page].items[index].menu);
+
+                index = temp_index;
+                page = temp_page;
+
+            }
+            else {
+                if (menu.pages[page].items[index].action()) {
+                    break;
+                }
+            }
+        }
+
+        ShowScreen(menu);
+    }
+
+    return false;
+}
+
 Menu mainMenu;
 Menu IRMenu;
 Menu RFID125Menu;
 Menu RFID1356Menu;
 Menu badUSBMenu;
+Menu InputMenu;
 
-MenuItem IRItems[] = {
+MenuItem IRItems1[] = {
     {"Send", sendIR, nullptr},
     {"Receive", recIR, nullptr},
     {"Back", back, nullptr},
 };
 
-MenuItem RFID125items[] = {
+MenuItem RFID125items1[] = {
     {"Write", write125, nullptr},
     {"Read", read125, nullptr},
     {"Saved", saved125, nullptr},
     {"Back", back, nullptr},
 };
 
-MenuItem RFID1356items[] = {
+MenuItem RFID1356items1[] = {
     {"Write", write1356, nullptr},
     {"Read", read1356, nullptr},
     {"Saved", saved1356, nullptr},
     {"Back", back, nullptr},
 };
 
-MenuItem badUSBitems[] = {
+MenuItem badUSBitems1[] = {
     {"Send payload", sendUSB, nullptr},
     {"New payload", newUSB, nullptr},
     {"Saved", savedUSB, nullptr},
     {"Back", back, nullptr},
 };
 
-MenuItem mainMenuItems[] = {
+MenuItem mainMenuItems1[] = {
     {"IR", nullptr, &IRMenu},
     {"RFID 125 kHz", nullptr, &RFID125Menu},
     {"RFID 13.56 MHz", nullptr, &RFID1356Menu},
     {"Bad USB", nullptr, &badUSBMenu},
     {"Master save", mainSave, nullptr},
-
+    {"Input menu", nullptr, &InputMenu},
 };
 
-void setup() {
-    IRMenu = { IRItems, 3 };
-    RFID125Menu = { RFID125items, 4 };
-    RFID1356Menu = { RFID1356items, 4 };
-    badUSBMenu = { badUSBitems, 4 };
-    mainMenu = { mainMenuItems, 4 };
-    
-    lcd.begin(16, 2);
-    pinMode(6, INPUT_PULLUP);
-}
 
-void loop() {
+MenuItem inputMenuItems1[] = {
+    {"A", input::A, nullptr},
+    {"B", input::B, nullptr},
+    {"C", input::C, nullptr},
+    {"D", input::D, nullptr},
+    {"E", input::E, nullptr},
+    {"F", input::inF, nullptr},
+    input::enterItem,
+};
+
+MenuItem inputMenuItems2[] = {
+    {"a", input::a, nullptr},
+    {"b", input::b, nullptr},
+    {"c", input::c, nullptr},
+    {"d", input::d, nullptr},
+    {"e", input::e, nullptr},
+    {"f", input::f, nullptr},
+    input::enterItem,
+};
+
+MenuItem inputMenuItems3[] = {
+    {"1", input::in1, nullptr},
+    {"2", input::in2, nullptr},
+    {"3", input::in3, nullptr},
+    {"4", input::in4, nullptr},
+    {"5", input::in5, nullptr},
+    {"6", input::in6, nullptr},
+    input::enterItem,
+};
+
+MenuItem inputMenuItems4[] = {
+    {".", input::in_tec, nullptr},
+    {",", input::in_car, nullptr},
+    {"(", input::in_onz, nullptr},
+    {")", input::in_znz, nullptr},
+    {":", input::in_dvo, nullptr},
+    {"_", input::in_ptr, nullptr},
+    input::enterItem,
+};
+
+
+MenuPage IRPages[] = {
+    {IRItems1, 3},
+};
+
+MenuPage RFID125Pages[] = {
+    {RFID125items1, 4},
+};
+
+MenuPage RFID1356Pages[] = {
+    {RFID1356items1, 4},
+};
+
+MenuPage badUSBPages[] = {
+    {badUSBitems1, 4 },
+}; 
+
+MenuPage mainMenuPages[] = {
+    {mainMenuItems1, 6 },
+};
+
+MenuPage inputMenuPages[] = {
+    {inputMenuItems1, 7},
+    {inputMenuItems2, 7},
+    {inputMenuItems3, 7},
+    {inputMenuItems4, 7},
+};
+
+int main() {
+    IRMenu = { IRPages, 1, 0 };
+    RFID125Menu = { RFID125Pages, 1, 0 };
+    RFID1356Menu = { RFID1356Pages, 1, 0 };
+    badUSBMenu = { badUSBPages, 1, 0 };
+    InputMenu = { inputMenuPages, 4, 1 };
+    mainMenu = { mainMenuPages, 1, 0 };
+
     MemuFunction(mainMenu);
 }

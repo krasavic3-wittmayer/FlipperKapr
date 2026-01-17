@@ -3,7 +3,4 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-VS/KaperCppTesting/.vs/**
-VS/KaperCppTesting/KaperCppTesting/x64/**
-VS/KaperCppTesting/x64/**
-VS/KaperCppTesting/KaperCppTesting.slnx/**
+VS/**
