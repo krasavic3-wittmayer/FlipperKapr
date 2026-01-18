@@ -207,7 +207,7 @@ MenuItem inputMenuItems1[] = {
     {"C", input::C, nullptr},
     {"D", input::D, nullptr},
     {"E", input::E, nullptr},
-    {"F", input::inF, nullptr},
+    {"F", input::Fchar, nullptr},
     input::enterItem,
 };
 
