@@ -278,7 +278,7 @@ bool MemuFunction(Menu menu) {
             }
 
         }
-        else if (analogRead(A2) > 824) {
+        else if (analogRead(A2) < 200) {
             temp_page = page;
             page += 1;
 
@@ -291,7 +291,7 @@ bool MemuFunction(Menu menu) {
             }
         }
 
-        else if (analogRead(A2) < 200) {
+        else if (analogRead(A2) > 824) {
             temp_page = page;
             page -= 1;
 
