@@ -325,6 +325,7 @@ bool MemuFunction(Menu menu) {
         }
 
         ShowScreen(menu);
+        delay(100);
     }
 
     return false;
