@@ -314,10 +314,10 @@ MenuPage mainMenuPages[] = {
 };
 
 MenuPage inputMenuPages[] = {
-    {inputMenuItems1, 26},
-    {inputMenuItems2, 26},
-    {inputMenuItems3, 11},
-    {inputMenuItems4, 14},
+    {inputMenuItems1, 27},
+    {inputMenuItems2, 27},
+    {inputMenuItems3, 12},
+    {inputMenuItems4, 15},
 };
 
 void setup() {
