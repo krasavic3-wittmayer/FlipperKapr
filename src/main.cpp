@@ -3,8 +3,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#include "menu.h"
-#include "inputMenu.h"
+#include "menu.hpp"
+#include "inputMenu.hpp"
 
 
 

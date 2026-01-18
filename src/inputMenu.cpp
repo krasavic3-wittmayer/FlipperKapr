@@ -1,4 +1,4 @@
-#include "inputMenu.h"
+#include "inputMenu.hpp"
 #include <Arduino.h>
 #include <LiquidCrystal.h>
 
