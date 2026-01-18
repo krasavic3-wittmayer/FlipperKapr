@@ -3,6 +3,10 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
+#include "menu.h"
+#include "inputMenu.h"
+
+
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -29,25 +33,6 @@ byte line[8] = {
 
 int index = 0;
 int page = 0;
-
-struct Menu;
-
-struct MenuItem {
-    const char* text;
-    bool (*action)();
-    Menu* menu;
-};
-
-struct MenuPage {
-    MenuItem* items;
-    int len;
-};
-
-struct Menu {
-    MenuPage* pages;
-    int len;
-    int mainPage;
-};
 
 bool back() {
     return true;

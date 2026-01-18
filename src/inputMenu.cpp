@@ -1,9 +1,11 @@
-#include "input.h"
+#include "inputMenu.h"
+#include <Arduino.h>
 #include <LiquidCrystal.h>
 
 extern LiquidCrystal lcd;
 
 namespace input {
+
     int index = 0;
     char text[13];
 
@@ -19,9 +21,8 @@ namespace input {
         index = 0;
     }
 
-    // ===== MAGIE TADY =====
-    #define GEN_CHAR_FUNC(fname, ch) \
-        bool fname() { add_char(ch); return false; }
+    #define GEN_CHAR_FUNC(name, ch) \
+        bool name() { add_char(ch); return false; }
 
     // lowercase
     GEN_CHAR_FUNC(a,'a') GEN_CHAR_FUNC(b,'b') GEN_CHAR_FUNC(c,'c')
@@ -36,7 +37,7 @@ namespace input {
 
     // uppercase
     GEN_CHAR_FUNC(A,'A') GEN_CHAR_FUNC(B,'B') GEN_CHAR_FUNC(C,'C')
-    GEN_CHAR_FUNC(D,'D') GEN_CHAR_FUNC(E,'E') GEN_CHAR_FUNC(F,'F')
+    GEN_CHAR_FUNC(D,'D') GEN_CHAR_FUNC(E,'E') GEN_CHAR_FUNC(Fchar,'F')
     GEN_CHAR_FUNC(G,'G') GEN_CHAR_FUNC(H,'H') GEN_CHAR_FUNC(I,'I')
     GEN_CHAR_FUNC(J,'J') GEN_CHAR_FUNC(K,'K') GEN_CHAR_FUNC(L,'L')
     GEN_CHAR_FUNC(M,'M') GEN_CHAR_FUNC(N,'N') GEN_CHAR_FUNC(O,'O')
@@ -46,28 +47,21 @@ namespace input {
     GEN_CHAR_FUNC(Y,'Y') GEN_CHAR_FUNC(Z,'Z')
 
     // numbers
-    GEN_CHAR_FUNC(in1,'1') GEN_CHAR_FUNC(in2,'2') GEN_CHAR_FUNC(in3,'3')
-    GEN_CHAR_FUNC(in4,'4') GEN_CHAR_FUNC(in5,'5') GEN_CHAR_FUNC(in6,'6')
-    GEN_CHAR_FUNC(in7,'7') GEN_CHAR_FUNC(in8,'8') GEN_CHAR_FUNC(in9,'9')
-    GEN_CHAR_FUNC(in0,'0')
+    GEN_CHAR_FUNC(in0,'0') GEN_CHAR_FUNC(in1,'1') GEN_CHAR_FUNC(in2,'2')
+    GEN_CHAR_FUNC(in3,'3') GEN_CHAR_FUNC(in4,'4') GEN_CHAR_FUNC(in5,'5')
+    GEN_CHAR_FUNC(in6,'6') GEN_CHAR_FUNC(in7,'7') GEN_CHAR_FUNC(in8,'8')
+    GEN_CHAR_FUNC(in9,'9')
 
     // symbols
-    GEN_CHAR_FUNC(in_tec,'.')
-    GEN_CHAR_FUNC(in_car,',')
-    GEN_CHAR_FUNC(in_ptr,'_')
-    GEN_CHAR_FUNC(in_dvo,':')
-    GEN_CHAR_FUNC(in_onz,'(')
-    GEN_CHAR_FUNC(in_znz,')')
-    GEN_CHAR_FUNC(in_dash,'-')
-    GEN_CHAR_FUNC(in_plus,'+')
-    GEN_CHAR_FUNC(in_star,'*')
-    GEN_CHAR_FUNC(in_slash,'/')
-    GEN_CHAR_FUNC(in_eq,'=')
-    GEN_CHAR_FUNC(in_qm,'?')
+    GEN_CHAR_FUNC(in_tec,'.') GEN_CHAR_FUNC(in_car,',')
+    GEN_CHAR_FUNC(in_ptr,'_') GEN_CHAR_FUNC(in_dvo,':')
+    GEN_CHAR_FUNC(in_onz,'(') GEN_CHAR_FUNC(in_znz,')')
+    GEN_CHAR_FUNC(in_dash,'-') GEN_CHAR_FUNC(in_plus,'+')
+    GEN_CHAR_FUNC(in_star,'*') GEN_CHAR_FUNC(in_slash,'/')
+    GEN_CHAR_FUNC(in_eq,'=') GEN_CHAR_FUNC(in_qm,'?')
     GEN_CHAR_FUNC(in_em,'!')
 
     #undef GEN_CHAR_FUNC
-    // ===== KONEC MAGIE =====
 
     bool enter() {
         lcd.clear();
