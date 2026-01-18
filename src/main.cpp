@@ -3,6 +3,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
+
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 byte arrowLeft[8] = {
@@ -91,166 +92,6 @@ bool savedUSB() { return false; }
 
 bool mainSave() { return false; }
 
-namespace input {
-    int index = 0;
-    char text[13];
-
-    void add_char(char letter) {
-        if (!(index > 11)) {
-            text[index] = letter;
-            input::index += 1;
-        }
-    }
-
-    bool a() {
-        add_char('a');
-        return false;
-    }
-
-    bool b() {
-        add_char('b');
-        return false;
-    }
-
-    bool c() {
-        add_char('c');
-        return false;
-    }
-
-    bool d() {
-        add_char('d');
-        return false;
-    }
-
-    bool e() {
-        add_char('e');
-        return false;
-    }
-
-    bool f() {
-        add_char('f');
-        return false;
-    }
-
-
-    bool A() {
-        add_char('A');
-        return false;
-    }
-
-    bool B() {
-        add_char('B');
-        return false;
-    }
-
-    bool C() {
-        add_char('C');
-        return false;
-    }
-
-    bool D() {
-        add_char('D');
-        return false;
-    }
-
-    bool E() {
-        add_char('E');
-        return false;
-    }
-
-    bool inF() {
-        add_char('F');
-        return false;
-    }
-
-
-    bool in1() {
-        add_char('1');
-        return false;
-    }
-
-    bool in2() {
-        add_char('2');
-        return false;
-    }
-
-    bool in3() {
-        add_char('3');
-        return false;
-    }
-
-    bool in4() {
-        add_char('4');
-        return false;
-    }
-
-    bool in5() {
-        add_char('5');
-        return false;
-    }
-
-    bool in6() {
-        add_char('6');
-        return false;
-    }
-
-
-    bool in_tec() {
-        add_char('.');
-        return false;
-    }
-
-    bool in_car() {
-        add_char(',');
-        return false;
-    }
-
-    bool in_ptr() {
-        add_char('_');
-        return false;
-    }
-
-    bool in_dvo() {
-        add_char(':');
-        return false;
-    }
-
-    bool in_onz() {
-        add_char('(');
-        return false;
-    }
-
-    bool in_znz() {
-        add_char(')');
-        return false;
-    }
-
-    bool enter() {
-        /*
-        for (char let : text) {
-            std::cout << let;
-
-        };
-        text[11] = '\0';
-        std::cout << "\n";
-        */
-        text[11] = '\0';
-        lcd.setCursor(0, 0);
-        lcd.print(text);
-        delay(500);
-
-        return true;
-    }
-
-    void create() {
-        for (int i = 0; i <= 12; i += 1) {
-            text[i] = ' ';
-        }
-        index = 0;
-    }
-
-    MenuItem enterItem = { "Enter", enter, nullptr };
-};
 
 bool MemuFunction(Menu menu) {
     index = 0;
@@ -325,7 +166,7 @@ bool MemuFunction(Menu menu) {
         }
 
         ShowScreen(menu);
-        delay(100);
+        delay(250);
     }
 
     return false;
@@ -443,13 +284,22 @@ MenuPage inputMenuPages[] = {
     {inputMenuItems4, 7},
 };
 
-int main() {
+void setup() {
     IRMenu = { IRPages, 1, 0 };
     RFID125Menu = { RFID125Pages, 1, 0 };
     RFID1356Menu = { RFID1356Pages, 1, 0 };
     badUSBMenu = { badUSBPages, 1, 0 };
     InputMenu = { inputMenuPages, 4, 1 };
     mainMenu = { mainMenuPages, 1, 0 };
+    lcd.begin(16, 2);
+    lcd.createChar(0, arrowLeft);
+    lcd.createChar(1, line);
 
+    pinMode(6, INPUT_PULLUP);
+
+}
+
+void loop() {
     MemuFunction(mainMenu);
 }
+
