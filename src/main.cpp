@@ -90,68 +90,86 @@ bool MemuFunction(Menu menu) {
     while (true) {
         if (analogRead(A1) > 824) {
             index += 1;
-
+            
             if (index >= menu.pages[page].len) {
                 index = 0;
             }
-
+            
+            ShowScreen(menu);
+            temp_index = 0;
+            while (analogRead(A1) > 824) {temp_index += 1; if (temp_index >= 100) {break;} delay(1);}
         }
+
         else if (analogRead(A1) < 200) {
             index -= 1;
-
+            
             if (index == -1) {
                 index = menu.pages[page].len - 1;
             }
-
+            
+            ShowScreen(menu);
+            temp_index = 0;
+            while (analogRead(A1) < 200) {temp_index += 1; if (temp_index >= 100) {break;} delay(1);}
         }
+
         else if (analogRead(A2) < 200) {
             temp_page = page;
             page += 1;
-
+            
             if (page >= menu.len) {
                 page = 0;
             }
-
+            
             if (menu.pages[page].len < menu.pages[temp_page].len) {
                 index = menu.pages[page].len;
             }
+
+            ShowScreen(menu);
+            temp_index = 0;
+            while (analogRead(A2) < 200) {temp_index += 1; if (temp_index >= 100) {break;} delay(1);}
         }
 
         else if (analogRead(A2) > 824) {
             temp_page = page;
             page -= 1;
-
+            
             if (page == -1) {
                 page = menu.len - 1;
             }
-
+            
             if (menu.pages[page].len < menu.pages[temp_page].len) {
                 index = menu.pages[page].len;
             }
-        }
 
+            ShowScreen(menu);
+            temp_index = 0;
+            while (analogRead(A2) > 824) {temp_index += 1; if (temp_index >= 100) {break;} delay(1);}
+        }
 
         else if (digitalRead(6) == LOW) {
             if (menu.pages[page].items[index].action == nullptr) {
                 temp_index = index;
                 temp_page = page;
-
+                
                 input::create();
                 MemuFunction(*menu.pages[page].items[index].menu);
-
+                
                 index = temp_index;
                 page = temp_page;
-
+                
             }
             else {
                 if (menu.pages[page].items[index].action()) {
                     break;
                 }
             }
+
+            ShowScreen(menu);
+            temp_index = 0;
+            while (digitalRead(6) == LOW) {temp_index += 1; if (temp_index >= 100) {break;} delay(1);}
         }
 
-        ShowScreen(menu);
-        delay(250);
+        delay(10);
     }
 
     return false;
