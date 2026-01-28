@@ -120,7 +120,7 @@ bool MemuFunction(Menu menu) {
                 page = 0;
             }
             
-            if (menu.pages[page].len < menu.pages[temp_page].len) {
+            if (index > menu.pages[page].len) {
                 index = menu.pages[page].len - 1;
             }
 
@@ -137,7 +137,7 @@ bool MemuFunction(Menu menu) {
                 page = menu.len - 1;
             }
             
-            if (menu.pages[page].len < menu.pages[temp_page].len) {
+            if (index > menu.pages[page].len) {
                 index = menu.pages[page].len - 1;
             }
 
