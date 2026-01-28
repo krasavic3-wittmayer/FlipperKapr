@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Project Path="KaperCppTesting/KaperCppTesting.vcxproj" Id="4288e465-d685-4dff-9e86-e6f563a7224e" />
-</Solution>

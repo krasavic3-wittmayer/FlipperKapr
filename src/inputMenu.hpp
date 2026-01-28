@@ -35,4 +35,9 @@ namespace input {
     bool enter();
 
     extern MenuItem enterItem;
+
+    extern MenuItem MenuItems1[27];
+    extern MenuItem MenuItems2[27];
+    extern MenuItem MenuItems3[11];
+    extern MenuItem MenuItems4[14];
 }

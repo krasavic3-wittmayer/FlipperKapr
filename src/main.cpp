@@ -218,99 +218,6 @@ MenuItem mainMenuItems1[] = {
     {"Input menu", nullptr, &InputMenu},
 };
 
-
-MenuItem inputMenuItems1[] = {
-    {"A", input::A, nullptr},
-    {"B", input::B, nullptr},
-    {"C", input::C, nullptr},
-    {"D", input::D, nullptr},
-    {"E", input::E, nullptr},
-    {"F", input::Fchar, nullptr},
-    {"G", input::G, nullptr},
-    {"H", input::H, nullptr},
-    {"I", input::I, nullptr},
-    {"J", input::J, nullptr},
-    {"K", input::K, nullptr},
-    {"L", input::L, nullptr},
-    {"M", input::M, nullptr},
-    {"N", input::N, nullptr},
-    {"O", input::O, nullptr},
-    {"P", input::P, nullptr},
-    {"Q", input::Q, nullptr},
-    {"R", input::R, nullptr},
-    {"S", input::S, nullptr},
-    {"T", input::T, nullptr},
-    {"U", input::U, nullptr},
-    {"V", input::V, nullptr},
-    {"W", input::W, nullptr},
-    {"X", input::X, nullptr},
-    {"Y", input::Y, nullptr},
-    {"Z", input::Z, nullptr},
-    input::enterItem,
-};
-
-MenuItem inputMenuItems2[] = {
-    {"a", input::a, nullptr},
-    {"b", input::b, nullptr},
-    {"c", input::c, nullptr},
-    {"d", input::d, nullptr},
-    {"e", input::e, nullptr},
-    {"f", input::f, nullptr},
-    {"g", input::g, nullptr},
-    {"h", input::h, nullptr},
-    {"i", input::i, nullptr},
-    {"j", input::j, nullptr},
-    {"k", input::k, nullptr},
-    {"l", input::l, nullptr},
-    {"m", input::m, nullptr},
-    {"n", input::n, nullptr},
-    {"o", input::o, nullptr},
-    {"p", input::p, nullptr},
-    {"q", input::q, nullptr},
-    {"r", input::r, nullptr},
-    {"s", input::s, nullptr},
-    {"t", input::t, nullptr},
-    {"u", input::u, nullptr},
-    {"v", input::v, nullptr},
-    {"w", input::w, nullptr},
-    {"x", input::x, nullptr},
-    {"y", input::y, nullptr},
-    {"z", input::z, nullptr},
-    input::enterItem,
-};
-
-MenuItem inputMenuItems3[] = {
-    {"1", input::in1, nullptr},
-    {"2", input::in2, nullptr},
-    {"3", input::in3, nullptr},
-    {"4", input::in4, nullptr},
-    {"5", input::in5, nullptr},
-    {"6", input::in6, nullptr},
-    {"7", input::in7, nullptr},
-    {"8", input::in8, nullptr},
-    {"9", input::in9, nullptr},
-    {"0", input::in0, nullptr},
-    input::enterItem,
-};
-
-MenuItem inputMenuItems4[] = {
-    {".", input::in_tec, nullptr},
-    {",", input::in_car, nullptr},
-    {"(", input::in_onz, nullptr},
-    {")", input::in_znz, nullptr},
-    {":", input::in_dvo, nullptr},
-    {"_", input::in_ptr, nullptr},
-    {"-", input::in_dash, nullptr},
-    {"+", input::in_plus, nullptr},
-    {"*", input::in_star, nullptr},
-    {"/", input::in_slash, nullptr},
-    {"=", input::in_eq, nullptr},
-    {"?", input::in_qm, nullptr},
-    {"!", input::in_em, nullptr},
-    input::enterItem,
-};
-
-
 MenuPage IRPages[] = {
     {IRItems1, 3},
 };
@@ -332,10 +239,10 @@ MenuPage mainMenuPages[] = {
 };
 
 MenuPage inputMenuPages[] = {
-    {inputMenuItems1, 27},
-    {inputMenuItems2, 27},
-    {inputMenuItems3, 12},
-    {inputMenuItems4, 15},
+    {input::MenuItems1, 27},
+    {input::MenuItems2, 27},
+    {input::MenuItems3, 11},
+    {input::MenuItems4, 14},
 };
 
 void setup() {
