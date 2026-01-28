@@ -163,4 +163,13 @@ MenuItem MenuItems4[14] = {
     {"!", input::in_em, nullptr},
     input::enterItem,
 };
+
+MenuPage MenuPages[4] = {
+    {input::MenuItems1, 27},
+    {input::MenuItems2, 27},
+    {input::MenuItems3, 11},
+    {input::MenuItems4, 14},
+};
+
+Menu InputMenu = { MenuPages, 4, 1 };
 }

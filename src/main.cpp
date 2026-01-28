@@ -55,6 +55,8 @@ void ShowScreen(Menu menu) {
 
     lcd.setCursor(14, 0);
     lcd.write(byte(0));
+    lcd.setCursor(15, 0);
+    lcd.write(byte(1));
 
     lcd.setCursor(0, 1);
     lcd.print(line2);
@@ -238,20 +240,13 @@ MenuPage mainMenuPages[] = {
     {mainMenuItems1, 6 },
 };
 
-MenuPage inputMenuPages[] = {
-    {input::MenuItems1, 27},
-    {input::MenuItems2, 27},
-    {input::MenuItems3, 11},
-    {input::MenuItems4, 14},
-};
-
 void setup() {
     IRMenu = { IRPages, 1, 0 };
     RFID125Menu = { RFID125Pages, 1, 0 };
     RFID1356Menu = { RFID1356Pages, 1, 0 };
     badUSBMenu = { badUSBPages, 1, 0 };
-    InputMenu = { inputMenuPages, 4, 1 };
     mainMenu = { mainMenuPages, 1, 0 };
+
     lcd.begin(16, 2);
     lcd.createChar(0, arrowLeft);
     lcd.createChar(1, line);
