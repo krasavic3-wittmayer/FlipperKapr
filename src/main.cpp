@@ -53,7 +53,7 @@ void ShowScreen(Menu menu) {
     lcd.setCursor(0, 0);
     lcd.print(line1);
 
-    lcd.setCursor(0, 14);
+    lcd.setCursor(14, 0);
     lcd.write(byte(0));
 
     lcd.setCursor(0, 1);
