@@ -5,8 +5,14 @@
 
 #include "menu.hpp"
 #include "inputMenu.hpp"
+#include "IR.hpp"
+#include "125kHz.hpp"
+#include "13.56MHz.hpp"
+#include "badUSB.hpp"
 
-
+const int slow_scroll_speed = 4; // In scrolls per second
+const int fast_scroll_speed = 8; // In scrolls per second
+const int speed_switcher = 3; // How many slow scrolls befor fast scrolls
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -33,10 +39,7 @@ byte line[8] = {
 
 int index = 0;
 int page = 0;
-
-bool back() {
-    return true;
-}
+int scrolls = 0;
 
 void ShowScreen(Menu menu) {
     const char* line1 = menu.pages[page].items[index].text;
@@ -62,21 +65,6 @@ void ShowScreen(Menu menu) {
     lcd.print(line2);
 }
 
-bool sendIR() { return false; }
-bool recIR() { return false; }
-
-bool write125() { return false; }
-bool read125() { return false; }
-bool saved125() { return false; }
-
-bool write1356() { return false; }
-bool read1356() { return false; }
-bool saved1356() { return false; }
-
-bool sendUSB() { return false; }
-bool newUSB() { return false; }
-bool savedUSB() { return false; }
-
 bool mainSave() { return false; }
 
 
@@ -99,7 +87,7 @@ bool MemuFunction(Menu menu) {
             
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A1) > 824) {temp_index += 1; if (temp_index >= 250) {break;} delay(1);}
+            while (analogRead(A1) > 824) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A1) < 200) {
@@ -111,7 +99,7 @@ bool MemuFunction(Menu menu) {
             
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A1) < 200) {temp_index += 1; if (temp_index >= 250) {break;} delay(1);}
+            while (analogRead(A1) < 200) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A2) < 200) {
@@ -128,7 +116,7 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A2) < 200) {temp_index += 1; if (temp_index >= 250) {break;} delay(1);}
+            while (analogRead(A2) < 200) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A2) > 824) {
@@ -145,7 +133,7 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A2) > 824) {temp_index += 1; if (temp_index >= 250) {break;} delay(1);}
+            while (analogRead(A2) > 824) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (digitalRead(6) == LOW) {
@@ -168,9 +156,12 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (digitalRead(6) == LOW) {temp_index += 1; if (temp_index >= 250) {break;} delay(1);}
+            while (digitalRead(6) == LOW) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
+        if (!(digitalRead(6) == LOW) && !(analogRead(A2) < 200) && !(analogRead(A2) > 824) && !(analogRead(A1) > 824) && !(analogRead(A1) < 200)) {
+            scrolls = 0;
+        }
         delay(10);
     }
 
@@ -178,73 +169,21 @@ bool MemuFunction(Menu menu) {
 }
 
 Menu mainMenu;
-Menu IRMenu;
-Menu RFID125Menu;
-Menu RFID1356Menu;
-Menu badUSBMenu;
-Menu InputMenu;
-
-MenuItem IRItems1[] = {
-    {"Send", sendIR, nullptr},
-    {"Receive", recIR, nullptr},
-    {"Back", back, nullptr},
-};
-
-MenuItem RFID125items1[] = {
-    {"Write", write125, nullptr},
-    {"Read", read125, nullptr},
-    {"Saved", saved125, nullptr},
-    {"Back", back, nullptr},
-};
-
-MenuItem RFID1356items1[] = {
-    {"Write", write1356, nullptr},
-    {"Read", read1356, nullptr},
-    {"Saved", saved1356, nullptr},
-    {"Back", back, nullptr},
-};
-
-MenuItem badUSBitems1[] = {
-    {"Send payload", sendUSB, nullptr},
-    {"New payload", newUSB, nullptr},
-    {"Saved", savedUSB, nullptr},
-    {"Back", back, nullptr},
-};
 
 MenuItem mainMenuItems1[] = {
-    {"IR", nullptr, &IRMenu},
-    {"RFID 125 kHz", nullptr, &RFID125Menu},
-    {"RFID 13.56 MHz", nullptr, &RFID1356Menu},
-    {"Bad USB", nullptr, &badUSBMenu},
+    {"IR", nullptr, &IR::IRMenu},
+    {"RFID 125 kHz", nullptr, &kHz125::RFID125Menu},
+    {"RFID 13.56 MHz", nullptr, &MHz1356::RFID1356Menu},
+    {"Bad USB", nullptr, &badUSB::badUSBMenu},
     {"Master save", mainSave, nullptr},
-    {"Input menu", nullptr, &InputMenu},
+    {"Input menu", nullptr, &input::InputMenu},
 };
-
-MenuPage IRPages[] = {
-    {IRItems1, 3},
-};
-
-MenuPage RFID125Pages[] = {
-    {RFID125items1, 4},
-};
-
-MenuPage RFID1356Pages[] = {
-    {RFID1356items1, 4},
-};
-
-MenuPage badUSBPages[] = {
-    {badUSBitems1, 4 },
-}; 
 
 MenuPage mainMenuPages[] = {
     {mainMenuItems1, 6 },
 };
 
 void setup() {
-    IRMenu = { IRPages, 1, 0 };
-    RFID125Menu = { RFID125Pages, 1, 0 };
-    RFID1356Menu = { RFID1356Pages, 1, 0 };
-    badUSBMenu = { badUSBPages, 1, 0 };
     mainMenu = { mainMenuPages, 1, 0 };
 
     lcd.begin(16, 2);

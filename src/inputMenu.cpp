@@ -7,7 +7,7 @@ extern LiquidCrystal lcd;
 namespace input {
 
     int index = 0;
-    char text[13];
+    char text[13] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\0'};
 
     static void add_char(char c) {
         if (index < 12) {
@@ -67,6 +67,7 @@ namespace input {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print(text);
+        create();
         delay(500);
         return true;
     }

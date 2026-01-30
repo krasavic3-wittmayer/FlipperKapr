@@ -18,3 +18,5 @@ struct Menu {
     int len;
     int mainPage;
 };
+
+bool back();
