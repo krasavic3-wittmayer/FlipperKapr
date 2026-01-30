@@ -4,15 +4,15 @@ namespace IR {
     bool send() { return false; }
     bool rec() { return false; }
 
-    MenuItem IRItems1[3] = {
+    MenuItem items1[3] = {
         {"Send", send, nullptr},
         {"Receive", rec, nullptr},
         {"Back", back, nullptr},
     };
 
-    MenuPage IRPages[1] = {
-        {IRItems1, 3},
+    MenuPage pages[1] = {
+        {items1, 3},
     };
 
-    Menu IRMenu = { IRPages, 1, 0 };
+    Menu menu = { pages, 1, 0 };
 }

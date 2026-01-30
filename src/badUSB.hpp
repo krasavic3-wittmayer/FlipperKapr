@@ -3,11 +3,11 @@
 #include "menu.hpp"
 
 namespace badUSB {
-    bool sendUSB();
-    bool newUSB();
-    bool savedUSB();
+    bool send();
+    bool create();
+    bool saved();
 
-    extern MenuItem badUSBitems1[4];
-    extern MenuPage badUSBPages[1];
-    extern Menu badUSBMenu;
+    extern MenuItem items1[4];
+    extern MenuPage pages[1];
+    extern Menu menu;
 }

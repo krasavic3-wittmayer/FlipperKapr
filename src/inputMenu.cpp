@@ -74,7 +74,7 @@ namespace input {
 
     MenuItem enterItem = { "Enter", enter, nullptr };
 
-    MenuItem MenuItems1[27] = {
+    MenuItem items1[27] = {
     {"A", input::A, nullptr},
     {"B", input::B, nullptr},
     {"C", input::C, nullptr},
@@ -104,7 +104,7 @@ namespace input {
     input::enterItem,
 };
 
-MenuItem MenuItems2[27] = {
+MenuItem items2[27] = {
     {"a", input::a, nullptr},
     {"b", input::b, nullptr},
     {"c", input::c, nullptr},
@@ -134,7 +134,7 @@ MenuItem MenuItems2[27] = {
     input::enterItem,
 };
 
-MenuItem MenuItems3[11] = {
+MenuItem items3[11] = {
     {"1", input::in1, nullptr},
     {"2", input::in2, nullptr},
     {"3", input::in3, nullptr},
@@ -148,7 +148,7 @@ MenuItem MenuItems3[11] = {
     input::enterItem,
 };
 
-MenuItem MenuItems4[14] = {
+MenuItem items4[14] = {
     {".", input::in_tec, nullptr},
     {",", input::in_car, nullptr},
     {"(", input::in_onz, nullptr},
@@ -165,12 +165,12 @@ MenuItem MenuItems4[14] = {
     input::enterItem,
 };
 
-MenuPage MenuPages[4] = {
-    {input::MenuItems1, 27},
-    {input::MenuItems2, 27},
-    {input::MenuItems3, 11},
-    {input::MenuItems4, 14},
+MenuPage pages[4] = {
+    {input::items1, 27},
+    {input::items2, 27},
+    {input::items3, 11},
+    {input::items4, 14},
 };
 
-Menu InputMenu = { MenuPages, 4, 1 };
+Menu menu = { pages, 4, 1 };
 }

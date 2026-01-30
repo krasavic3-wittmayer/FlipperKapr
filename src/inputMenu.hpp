@@ -37,11 +37,11 @@ namespace input {
 
     extern MenuItem enterItem;
 
-    extern MenuItem MenuItems1[27];
-    extern MenuItem MenuItems2[27];
-    extern MenuItem MenuItems3[11];
-    extern MenuItem MenuItems4[14];
+    extern MenuItem items1[27];
+    extern MenuItem items2[27];
+    extern MenuItem items3[11];
+    extern MenuItem items4[14];
 
-    extern MenuPage MenuPages[4];
-    extern Menu InputMenu;
+    extern MenuPage pages[4];
+    extern Menu menu;
 }

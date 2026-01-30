@@ -3,11 +3,11 @@
 #include "menu.hpp"
 
 namespace kHz125 {
-    bool write125();
-    bool read125();
-    bool saved125();
+    bool write();
+    bool read();
+    bool saved();
 
-    extern MenuItem RFID125items1[4];
-    extern MenuPage RFID125Pages[1];
-    extern Menu RFID125Menu;
+    extern MenuItem items1[4];
+    extern MenuPage pages[1];
+    extern Menu menu;
 }

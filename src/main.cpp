@@ -168,33 +168,32 @@ bool MemuFunction(Menu menu) {
     return false;
 }
 
-Menu mainMenu;
+Menu menu;
 
-MenuItem mainMenuItems1[] = {
-    {"IR", nullptr, &IR::IRMenu},
-    {"RFID 125 kHz", nullptr, &kHz125::RFID125Menu},
-    {"RFID 13.56 MHz", nullptr, &MHz1356::RFID1356Menu},
-    {"Bad USB", nullptr, &badUSB::badUSBMenu},
+MenuItem items1[] = {
+    {"IR", nullptr, &IR::menu},
+    {"RFID 125 kHz", nullptr, &kHz125::menu},
+    {"RFID 13.56 MHz", nullptr, &MHz1356::menu},
+    {"Bad USB", nullptr, &badUSB::menu},
     {"Master save", mainSave, nullptr},
-    {"Input menu", nullptr, &input::InputMenu},
+    {"Input menu", nullptr, &input::menu},
 };
 
-MenuPage mainMenuPages[] = {
-    {mainMenuItems1, 6 },
+MenuPage pages[] = {
+    {items1, 6 },
 };
 
 void setup() {
-    mainMenu = { mainMenuPages, 1, 0 };
+    menu = { pages, 1, 0 };
 
     lcd.begin(16, 2);
     lcd.createChar(0, arrowLeft);
     lcd.createChar(1, line);
 
     pinMode(6, INPUT_PULLUP);
-
 }
 
 void loop() {
-    MemuFunction(mainMenu);
+    MemuFunction(menu);
 }
 

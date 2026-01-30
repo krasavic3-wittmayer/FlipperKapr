@@ -6,7 +6,7 @@ namespace IR {
     bool send();
     bool rec();
 
-    extern MenuItem IRItems1[3];
-    extern MenuPage IRPages[1];
-    extern Menu IRMenu;
+    extern MenuItem items1[3];
+    extern MenuPage pages[1];
+    extern Menu menu;
 }
