@@ -1,4 +1,5 @@
 #pragma once
+
 #include "menu.hpp"
 
 namespace input {
@@ -35,4 +36,12 @@ namespace input {
     bool enter();
 
     extern MenuItem enterItem;
+
+    extern MenuItem items1[27];
+    extern MenuItem items2[27];
+    extern MenuItem items3[11];
+    extern MenuItem items4[14];
+
+    extern MenuPage pages[4];
+    extern Menu menu;
 }
