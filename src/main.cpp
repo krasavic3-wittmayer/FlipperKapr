@@ -87,7 +87,7 @@ bool MemuFunction(Menu menu) {
             
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A1) > 824) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
+            while (analogRead(A1) > 824) {temp_index += 1; if (temp_index >= 1000 / (scrolls <= speed_switcher ? slow_scroll_speed : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A1) < 200) {
@@ -99,7 +99,7 @@ bool MemuFunction(Menu menu) {
             
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A1) < 200) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
+            while (analogRead(A1) < 200) {temp_index += 1; if (temp_index >= 1000 / (scrolls <= speed_switcher ? slow_scroll_speed : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A2) < 200) {
@@ -116,7 +116,7 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A2) < 200) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
+            while (analogRead(A2) < 200) {temp_index += 1; if (temp_index >= 1000 / (scrolls <= speed_switcher ? slow_scroll_speed : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (analogRead(A2) > 824) {
@@ -133,7 +133,7 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (analogRead(A2) > 824) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
+            while (analogRead(A2) > 824) {temp_index += 1; if (temp_index >= 1000 / (scrolls <= speed_switcher ? slow_scroll_speed : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         else if (digitalRead(6) == LOW) {
@@ -156,7 +156,7 @@ bool MemuFunction(Menu menu) {
 
             ShowScreen(menu);
             temp_index = 0;
-            while (digitalRead(6) == LOW) {temp_index += 1; if (temp_index >= 1000 / (slow_scroll_speed ? scrolls <= speed_switcher : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
+            while (digitalRead(6) == LOW) {temp_index += 1; if (temp_index >= 1000 / (scrolls <= speed_switcher ? slow_scroll_speed : fast_scroll_speed)) {break;} delay(1);} scrolls += 1;
         }
 
         if (!(digitalRead(6) == LOW) && !(analogRead(A2) < 200) && !(analogRead(A2) > 824) && !(analogRead(A1) > 824) && !(analogRead(A1) < 200)) {
@@ -196,4 +196,3 @@ void setup() {
 void loop() {
     MemuFunction(menu);
 }
-
