@@ -187,6 +187,9 @@ void setup() {
     menu = { pages, 1, 0 };
 
     lcd.begin(16, 2);
+    delay(100);
+    lcd.clear();
+    delay(100);
     lcd.createChar(0, arrowLeft);
     lcd.createChar(1, line);
 
