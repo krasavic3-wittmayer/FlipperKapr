@@ -17,6 +17,7 @@ struct Menu {
     MenuPage* pages;
     int len;
     int mainPage;
+    const char* name;
 };
 
 struct DynamicVal {

@@ -1,9 +1,17 @@
 #include "menu.hpp"
+#include "SD.hpp"
+
+#include <Arduino.h>
+#include <SPI.h>
+#include <MFRC522.h>
+
+extern bool (DynamicMenuFunction)();
+extern DynamicVal Value;
 
 namespace kHz125 {
-    bool write() { return false; }
-    bool read() { return false; }
-    bool saved() { return false; }
+    bool write();
+    bool read();
+    bool saved() { return DynamicMenuFunction(); }
 
     MenuItem items1[4] = {
         {"Write", write, nullptr},
@@ -16,5 +24,13 @@ namespace kHz125 {
         {items1, 4},
     };
 
-    Menu menu = { pages, 1, 0 };
+    Menu menu = { pages, 1, 0, "125" };
 }
+
+bool kHz125::write() {
+    return false;
+};
+
+bool kHz125::read() {
+    return false;
+};

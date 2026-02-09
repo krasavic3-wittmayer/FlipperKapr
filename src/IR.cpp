@@ -1,8 +1,15 @@
 #include "menu.hpp"
+#include "SD.hpp"
+
+#include <IRremote.hpp>
+
+extern bool (DynamicMenuFunction)();
+extern DynamicVal Value;
 
 namespace IR {
-    bool send() { return false; }
-    bool rec() { return false; }
+    bool send();
+    bool rec();
+    
 
     MenuItem items1[3] = {
         {"Send", send, nullptr},
@@ -14,5 +21,9 @@ namespace IR {
         {items1, 3},
     };
 
-    Menu menu = { pages, 1, 0 };
+    Menu menu = { pages, 1, 0, "IR" };
 }
+
+bool IR::send() { return false; }
+
+bool IR::rec() { return false; }

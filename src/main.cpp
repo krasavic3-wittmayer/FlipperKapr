@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+
 #include <SPI.h>
 #include <MFRC522.h>
 
@@ -42,7 +43,7 @@ int index = 0;
 int page = 0;
 int scrolls = 0;
 
-const char* menu_name = "IR";
+const char* menu_name = "";
 int depeth = 0;
 
 DynamicVal Value = {};
@@ -101,6 +102,10 @@ bool MemuFunction(Menu menu) {
     int temp_index = 0;
     int temp_page = 0;
 
+    if (depeth <= 1) {
+        menu_name = menu.name;
+    }
+
     ShowScreen(menu);
 
     while (true) {
@@ -158,10 +163,16 @@ bool MemuFunction(Menu menu) {
             if (menu.pages[page].items[index].action == nullptr) {
                 temp_index = index;
                 temp_page = page;
+
+                depeth += 1;
                 
                 input::create();
                 MemuFunction(*menu.pages[page].items[index].menu);
-                
+
+                if (depeth <= 1) {
+                    menu_name = menu.name;
+                }
+                    
                 index = temp_index;
                 page = temp_page;
                 
@@ -298,8 +309,16 @@ MenuPage pages[] = {
     {items1, 8 },
 };
 
+byte cardUID[10] = {};
+byte UIDlen = 0;
+
+#define SS_PIN 53
+#define RST_PIN 48
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+
 void setup() {
-    menu = { pages, 1, 0 };
+    menu = { pages, 1, 0, "main" };
 
     lcd.begin(16, 2);
     delay(100);
@@ -307,6 +326,9 @@ void setup() {
     delay(100);
     lcd.createChar(0, arrowLeft);
     lcd.createChar(1, line);
+
+    SPI.begin();
+    rfid.PCD_Init();
 
     pinMode(6, INPUT_PULLUP);
 }

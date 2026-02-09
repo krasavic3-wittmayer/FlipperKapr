@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include "menu.hpp"
 
 DynamicPage load_page(const char* menu, int page) {
@@ -44,4 +46,14 @@ void load_val(const DynamicVal& val, char* out, int outSize) {
     if (i < outSize - 1) out[i++] = 'A' + val.index;
 
     out[i] = '\0';
+}
+
+uint64_t load_val(const DynamicVal& val) {
+    return 0;
+}
+
+void load_val(const DynamicVal& val, byte buffer[10]) {
+    for (int i = 0; i < 10; i += 1) {
+        buffer[i] = 0;
+    }
 }

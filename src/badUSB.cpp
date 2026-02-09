@@ -1,9 +1,13 @@
 #include "menu.hpp"
+#include "SD.hpp"
+
+extern bool (DynamicMenuFunction)();
+extern DynamicVal Value;
 
 namespace badUSB {
-    bool send() { return false; }
-    bool create() { return false; }
-    bool saved() { return false; }
+    bool send();
+    bool create();
+    bool saved() { return DynamicMenuFunction(); }
 
     MenuItem items1[4] = {
         {"Send payload", send, nullptr},
@@ -16,5 +20,9 @@ namespace badUSB {
         {items1, 4 },
     }; 
 
-    Menu menu = { pages, 1, 0 };
+    Menu menu = { pages, 1, 0, "BUSB" };
 }
+
+bool badUSB::send() { return false; }
+
+bool badUSB::create() { return false; }

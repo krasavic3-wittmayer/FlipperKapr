@@ -1,6 +1,11 @@
 #include "inputMenu.hpp"
+#include "SD.hpp"
+
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+
+extern bool (DynamicMenuFunction)();
+extern DynamicVal Value;
 
 extern LiquidCrystal lcd;
 
@@ -172,5 +177,5 @@ MenuPage pages[4] = {
     {input::items4, 14},
 };
 
-Menu menu = { pages, 4, 1 };
+Menu menu = { pages, 4, 1, "Input" };
 }
