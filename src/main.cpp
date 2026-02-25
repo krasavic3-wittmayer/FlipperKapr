@@ -4,6 +4,11 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
+#define SS_PIN  53
+#define RST_PIN 49
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
 #include "menu.hpp"
 #include "inputMenu.hpp"
 #include "IR.hpp"
@@ -319,6 +324,13 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 
 void setup() {
     menu = { pages, 1, 0, "main" };
+
+    Serial.begin(9600);
+    SPI.begin();
+
+    mfrc522.PCD_Init();
+
+    Serial.println("Přilož kartu...");
 
     lcd.begin(16, 2);
     delay(100);

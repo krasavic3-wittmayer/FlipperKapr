@@ -4,9 +4,13 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <LiquidCrystal.h>
 
 extern bool (DynamicMenuFunction)();
 extern DynamicVal Value;
+
+extern MFRC522 mfrc522;
+extern LiquidCrystal lcd;
 
 namespace MHz1356 {
     bool write();
@@ -34,5 +38,24 @@ bool MHz1356::write() {
 }
 
 bool MHz1356::read() {
+    unsigned long startTime = millis();
+
+    Serial.println("Čtu, lásko.");
+    while (millis() - startTime < 5000) {
+
+        if (!mfrc522.PICC_IsNewCardPresent()) continue;
+        if (!mfrc522.PICC_ReadCardSerial()) continue;
+
+        Serial.print("UID: ");
+        for (byte i = 0; i < mfrc522.uid.size; i++) {
+            Serial.print(mfrc522.uid.uidByte[i], HEX);
+        }
+        Serial.println();
+
+        mfrc522.PICC_HaltA();
+        return true;
+    }
+
+    Serial.println("Cas vyprsel, karta nenalezena");
     return false;
 }
